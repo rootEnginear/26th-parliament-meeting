@@ -5,7 +5,7 @@ import compress from 'astro-compress';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://rootenginear.github.io',
-	base: '/25th-parliament-meeting',
+	base: '/26th-parliament-meeting',
 	integrations: [
 		compress({
 			html: {
