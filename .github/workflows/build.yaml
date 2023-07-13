@@ -1,0 +1,33 @@
+name: build-astro-page
+
+on:
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows: [update-data]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        if: ${{ contains(fromJson('["push", "workflow_dispatch"]'), github.event_name) || github.event.workflow_run.conclusion == 'success' }}
+        uses: actions/checkout@v3
+      - name: Init
+        if: ${{ contains(fromJson('["push", "workflow_dispatch"]'), github.event_name) || github.event.workflow_run.conclusion == 'success' }}
+        run: yarn
+      - name: Build
+        if: ${{ contains(fromJson('["push", "workflow_dispatch"]'), github.event_name) || github.event.workflow_run.conclusion == 'success' }}
+        run: yarn build
+      - name: Deploy
+        if: ${{ contains(fromJson('["push", "workflow_dispatch"]'), github.event_name) || github.event.workflow_run.conclusion == 'success' }}
+        uses: s0/git-publish-subdir-action@v2.3.0
+        env:
+          REPO: self
+          BRANCH: page
+          FOLDER: dist
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

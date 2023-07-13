@@ -1,0 +1,24 @@
+{
+	"name": "25th-parliament-meeting",
+	"version": "1.0.0",
+	"license": "MIT",
+	"scripts": {
+		"dev": "astro dev",
+		"start": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro",
+		"process": "node process.js",
+		"fetch": "node fetch.js",
+		"force-fetch": "node fetch.js --force"
+	},
+	"dependencies": {
+		"astro": "^1.1.5",
+		"jsdom": "^20.0.0",
+		"node-fetch": "^3.2.10"
+	},
+	"devDependencies": {
+		"astro-compress": "^1.0.6"
+	},
+	"type": "module"
+}

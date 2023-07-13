@@ -1,0 +1,100 @@
+---
+import Layout from '../layouts/Layout.astro';
+import data from '../data/all_parsed.json'
+---
+
+<Layout>
+	<div class="instruction">
+		<span>ค้นหา</span>
+		<input id="search-input" type="text" placeholder="ไม่ไว้วางใจ +ประยุทธ์ -ประวิทย์" disabled/>
+		<button id="search-btn" type="button" disabled>...</button>
+		<span>อันที่ <span id="search-current">0</span> จาก <span id="search-all">0</span></span>
+		<button id="prev-btn" type="button" onclick="gotoPrevSearch()" disabled>ก่อนหน้า</button>
+		<button id="focus-btn" type="button" onclick="scrollCurrentIntoView()" disabled>โฟกัส</button>
+		<button id="next-btn" type="button" onclick="gotoNextSearch()" disabled>ถัดไป</button>
+		<span class="instruction-end">ไม่ควรใช้ Scrollbar</span>
+		<button id="howto-btn" onclick="showInstruction()" disabled>วิธีใช้กล่องค้นหา</button>
+	</div>
+	<dialog id="instruction-dialog">
+		<h1 class="b">รายละเอียดกล่องค้นหาละเอียด</h1>
+		<ol>
+			<li>
+				ใส่คำค้นหาที่ต้องการ แล้วกด "ค้นหา"
+				<ul>
+					<li>"คำค้นหา" สามารถมีกี่คำก็ได้ โดยแยกด้วยการเว้นวรรค เช่น "ไม่ไว้วางใจ ชลน่าน"</li>
+					<li>หากต้องการใส่ช่องว่างลงในคำค้นหา ให้ใช้เครื่องหมาย _ เช่น "รังสิมันต์_โรม"</li>
+					<li>
+						หากต้องการบังคับให้มติที่ค้นหา<strong>มีคำนั้น</strong> ให้ใส่เครื่องหมาย + ข้างหน้าคำค้นหา
+						เช่น "ไม่ไว้วางใจ +ประยุทธ์"
+					</li>
+					<li>
+						หากต้องการบังคับให้มติที่ค้นหา<strong>ไม่มีคำนั้น</strong> ให้ใส่เครื่องหมาย - ข้างหน้าคำค้นหา
+						เช่น "ไม่ไว้วางใจ -ประวิทย์"
+					</li>
+					<li>
+						คำค้นหาที่ไม่มีเครื่องหมาย + หรือ - จะต้องปรากฏในมติอย่างน้อย 1 ครั้ง<strong
+							>จากทุกคำ</strong
+						>
+						เช่น "ไม่ไว้วางใจ ชลน่าน"<br />จะต้องมีคำว่า "ไม่ไว้วางใจ" <em>หรือ</em> "ชลน่าน" (คำใดคำหนึ่ง
+						หรือทั้งสองคำ) ปรากฏในมติ 1 ครั้ง
+					</li>
+				</ul>
+			</li>
+			<li>ในการเลื่อนไปที่อันถัดไป สามารถใช้ปุ่ม "ก่อนหน้า" หรือ "ถัดไป" ได้ ถ้าไม่ขึ้น ลองกด "โฟกัส" ย้ำๆ ดู</li>
+		</ol>
+		<hr>
+		<form method="dialog" class="dialog-form">
+			<small>Build: {Date.now().toString(36)}</small>
+			<button>ปิด</button>
+		</form>
+	</dialog>
+	<main>
+		{data.map(d => (
+			<article itemscope itemtype="https://schema.org/Report">
+				{d.title.length !== 0 && (
+					<p itemprop="articleBody"><span class="custom-search-marker" role="none">#</span><Fragment set:html={d.title.join('\n')} /></p>
+				)}
+				{d.score_summary_docs.length !== 0 && (
+					<details>
+						<summary>ใบประมวลผลการลงมติ (เช็คคนมา, ผลโหวตแต่ละเรื่อง)</summary>
+						{d.score_summary_docs.map((m:string[]|string) => typeof m === 'string' ? (
+							<strong class="block">{m}</strong>
+						) : (
+							<a href={m[1]} target="_blank" rel="nofollow noopener noreferrer">
+								{m[0]}
+							</a>
+						))}
+					</details>
+				)}
+				<hr />
+				{d.meeting_docs.length !== 0 && (
+					<details>
+						<summary>ข้อมูลการประชุม (บันทึกการประชุม)</summary>
+						{d.meeting_docs.map(([t,l]:string[]) => (
+							<a href={l} target="_blank" rel="nofollow noopener noreferrer">
+								{t}
+							</a>
+						))}
+					</details>
+				)}
+				<h1>
+					<a
+						itemprop="sameAs"
+						href={`https://msbis.parliament.go.th/ewtadmin/ewt/parliament_report/main_warehouse_detail.php?mid=${d.id}`}
+						target="_blank"
+						rel="nofollow noopener noreferrer"
+					>
+						<span itemprop="reportNumber">{d.id}</span>
+						{d.category !== 'หน้าหลัก' && (
+							<>
+								— <span itemprop="name">{d.category} {d.no}</span>
+							</>
+						)}
+					</a>
+				</h1>
+			</article>
+		))}
+	</main>
+	<button class="gotop" type="button" onclick="goTop()">⏫&#xFE0E;</button>
+	<button class="gobottom" type="button" onclick="goBottom()">⏬&#xFE0E;</button>
+</Layout>

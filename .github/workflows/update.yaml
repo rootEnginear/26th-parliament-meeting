@@ -1,0 +1,30 @@
+name: update-data
+
+on:
+  # schedule:
+  #   - cron: '0 11 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force fetch'
+        required: false
+        type: boolean
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Init
+        run: yarn
+      - name: Force Fetch
+        if: ${{ inputs.force }}
+        run: yarn fetch --force
+      - name: Normal Fetch
+        if: ${{ !inputs.force }}
+        run: yarn fetch
+      - name: Process
+        run: yarn process
+      - name: Commit Change
+        uses: stefanzweifel/git-auto-commit-action@v4
