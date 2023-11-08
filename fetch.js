@@ -1,5 +1,6 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
+import { Agent } from 'https';
 import all_raw from './src/data/all_raw.json' assert { type: 'json' };
 import current_position from './pos.json' assert { type: 'json' };
 
@@ -7,10 +8,15 @@ const START = 4494;
 const EMPTY_TEMPLATE =
 	'<script>\r\nfunction download_d(aid,mid){ \r\n\t\tvar link_t = \'main_warehouse_dll.php\';\r\n\t\tvar link_target = \'_blank\';\r\n\t\tdocument.getElementById(\'aid\').value = aid;\r\n\t\tdocument.getElementById(\'mid\').value = mid;\r\n\t\tdocument.getElementById(\'frmwh\').action = link_t;\r\n\t\tdocument.getElementById(\'frmwh\').target =link_target;\r\n\t\tdocument.getElementById(\'frmwh\').submit();\r\n\t\tadddownload(aid,mid);\r\n}\r\n</script>\r\n<table width="96%" border="0" align="center" cellpadding="0" cellspacing="8">\r\n<tr >\r\n    <td ><table width="100%" border="0" align="center" cellpadding="5" cellspacing="0">\r\n  <tr>\r\n    <td><br><span style="font-family: tahoma;font-size: 17px;"></span><hr size="1" color="#CCCCCC"></td>\r\n  </tr>\r\n</table></td>\r\n  </tr>\r\n  <tr>\r\n    <td><a href="#G" onClick="show_datawarehouse_list(\'\',\'\',\'\');" >หน้าหลัก</a>&nbsp;   <hr size="1" color="#CCCCCC"></td>\r\n  </tr>\r\n   <tr>\r\n    <td><strong></strong></td>\r\n  </tr>\r\n  <tr>\r\n    <td><a href="#detail" onClick="if(document.all.mydetail.style.display == \'\'){ document.all.mydetail.style.display = \'none\';document.all.mysrc.src=\'mainpic/arrow3.gif\'; }else{ document.all.mydetail.style.display = \'\';document.all.mysrc.src=\'mainpic/arrow2.gif\'; }"><strong>เรื่องที่พิจารณา</strong> <img id="mysrc" src="mainpic/arrow3.gif" width="7" height="7"align="absmiddle" border="0"  /></a></td>\r\n  </tr>\r\n  <tr id="mydetail" style="display:none">\r\n    <td>\r\n\t<br />\r\n\t</td>\r\n  </tr>\r\n    <tr>\r\n    <td>&nbsp;</td>\r\n  </tr>\r\n</table>\r\n';
 
+const agent = new Agent({
+	rejectUnauthorized: false
+});
+
 const fetchData = async (id) => {
 	let resp = await fetch(
 		'https://msbis.parliament.go.th/ewtadmin/ewt/parliament_report/main_warehouse_detail.php?mid=' +
-			id
+			id,
+		{ agent }
 	);
 	let buffer = await resp.arrayBuffer();
 	let decoder = new TextDecoder('tis-620');
