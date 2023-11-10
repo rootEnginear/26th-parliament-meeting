@@ -1,20 +1,22 @@
 import { defineConfig } from 'astro/config';
 
-import compress from 'astro-compress';
+import Compress from 'astro-compress';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://rootenginear.github.io',
 	base: '/26th-parliament-meeting',
 	integrations: [
-		compress({
-			html: {
-				collapseWhitespace: true,
-				ignoreCustomFragments: [/<p itemprop="articleBody">[\S\s]+?<\/p>/],
-				removeComments: true,
-				removeRedundantAttributes: true
+		Compress({
+			HTML: {
+				'html-minifier-terser': {
+					collapseWhitespace: true,
+					ignoreCustomFragments: [/<p itemprop="articleBody">[\S\s]+?<\/p>/],
+					removeComments: true,
+					removeRedundantAttributes: true
+				}
 			},
-			img: false
+			Image: false
 		})
 	]
 });
