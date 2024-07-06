@@ -170,6 +170,11 @@ article {
 	scroll-margin: 48px;
 }
 
+article > p > strong:not(:first-of-type) {
+	display: inline-block;
+	margin-top: 12px;
+}
+
 h1 {
 	margin: 0 0 8px;
 	font-size: 1rem;
