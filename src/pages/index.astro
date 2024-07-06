@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import data from '../data/all_parsed.json'
+import data from '../data/all_parsed.json';
+
+const generateTime = new Date().toLocaleString('th-TH');
 ---
 
 <Layout>
@@ -12,7 +14,7 @@ import data from '../data/all_parsed.json'
 		<button id="prev-btn" type="button" onclick="gotoPrevSearch()" disabled>ก่อนหน้า</button>
 		<button id="focus-btn" type="button" onclick="scrollCurrentIntoView()" disabled>โฟกัส</button>
 		<button id="next-btn" type="button" onclick="gotoNextSearch()" disabled>ถัดไป</button>
-		<span class="instruction-end">ไม่ควรใช้ Scrollbar</span>
+		<span class="instruction-end">Update {generateTime} — ไม่ควรใช้ Scrollbar</span>
 		<button id="howto-btn" onclick="showInstruction()" disabled>วิธีใช้กล่องค้นหา</button>
 	</div>
 	<dialog id="instruction-dialog">
@@ -44,7 +46,7 @@ import data from '../data/all_parsed.json'
 		</ol>
 		<hr>
 		<form method="dialog" class="dialog-form">
-			<small>Build: {Date.now().toString(36)}</small>
+			<small>Update: {generateTime}</small>
 			<button>ปิด</button>
 		</form>
 	</dialog>
