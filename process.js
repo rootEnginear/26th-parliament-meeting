@@ -1,7 +1,7 @@
 import fs from 'fs';
 import jsdom from 'jsdom';
-const { JSDOM } = jsdom;
 import raw_data from './src/data/all_raw.json' assert { type: 'json' };
+const { JSDOM } = jsdom;
 
 const formatString = (str) => {
 	return str
@@ -54,7 +54,10 @@ const formatTitle = (str) => {
 			'ระเบียบวาระกระทู้ถามแยกเฉพาะ',
 			'ระเบียบวาระตามที่ที่ประชุมมีมติ',
 			'เรื่องที่เสนอใหม่',
-			'ญัตติด่วนด้วยวาจา'
+			'ญัตติด่วนด้วยวาจา',
+			'เรื่องที่แจ้งให้ที่ประชุมรับทราบ',
+			'ญัตติด้วยวาจา',
+			'ญัตติด่วน'
 		].includes(str)
 	)
 		return `<strong>${str}</strong>`;
