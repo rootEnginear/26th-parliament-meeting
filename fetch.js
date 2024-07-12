@@ -1,8 +1,8 @@
 import fs from 'fs';
-import fetch from 'node-fetch';
 import { Agent } from 'https';
-import all_raw from './src/data/all_raw.json' assert { type: 'json' };
+import fetch from 'node-fetch';
 import current_position from './pos.json' assert { type: 'json' };
+import all_raw from './src/data/all_raw.json' assert { type: 'json' };
 
 const START = 4494;
 const EMPTY_TEMPLATE =
@@ -13,6 +13,7 @@ const agent = new Agent({
 });
 
 const fetchData = async (id) => {
+	console.log(Date.now(), `Fetching ${id}`);
 	let resp = await fetch(
 		'https://msbis.parliament.go.th/ewtadmin/ewt/parliament_report/main_warehouse_detail.php?mid=' +
 			id,
@@ -30,6 +31,9 @@ const fetchThru = async (arr) => {
 
 	for (let i = 0; i < len; i++) {
 		result[i] = [arr[i], await fetchData(arr[i])];
+
+		console.log(Date.now(), 'Sleeping 5 seconds');
+		await new Promise((r) => setTimeout(r, 5000));
 	}
 
 	return result;
